@@ -1,0 +1,549 @@
+swagger: "2.0"
+host: v5.boodskap.io
+basePath: /api
+schemes:
+  - https
+info: 
+  version: "5.0.0-61"
+  title: "Boodskap API"
+  description: "Boodskap IoT Platform API"
+  termsOfService: "https://boodskap.io/terms-conditions"
+  contact: 
+    name: "Boodskap Team"
+  license: 
+    name: "MIT"
+paths:
+  '/domain/login':
+    post:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      tags:
+        - Domain
+      summary: Login with POST
+      operationId: doLogin
+      parameters:
+        - name: entity
+          in: body
+          description: Login JSON object
+          required: true
+          schema:
+            $ref: '#/definitions/Login'
+      responses:
+        '200':
+          description: "UserDomain Object"
+          schema: 
+            $ref: "#/definitions/UserDomain"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/micro/service/call/upload/{slug}/{apiname}/{method}': 
+    post: 
+      tags:
+        - Micro API
+      summary: Invoke a dynamic micro-api using POST file upload
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "text/plain"
+        - "*/*"
+        - "application/json"
+      operationId: "invokePOSTUploadApi"
+      parameters:
+        - name: TOKEN
+          in: header
+          description: Auth token of the logged in user
+          required: false
+          type: string
+        - name: KEY
+          in: header
+          description: API key of the domain or microservice provided key
+          required: false
+          type: string
+        - name: slug
+          in: path
+          description: Domain Key or the Slug name provided by the domain
+          required: true
+          type: string
+        - name: apiname
+          in: path
+          description: Api class name
+          required: true
+          type: string
+        - name: method
+          in: path
+          description: Api method name or the slug name provided by the api method
+          required: true
+          type: string
+        - name: file
+          in: formData
+          description: Uploaded multipart file content
+          type: file
+          required: true
+      responses: 
+        "200":
+          description: "Success"
+          schema: 
+            type: object
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+      security:
+      - authtoken: []
+  '/micro/service/call/del/{slug}/{apiname}/{method}': 
+    delete: 
+      tags:
+        - Micro API
+      summary: Invoke a dynamic micro-api using DELETE
+      consumes:
+        - "application/json"
+      produces:
+        - "text/plain"
+        - "*/*"
+        - "application/json"
+      operationId: "invokeDELETEApi"
+      parameters:
+        - name: TOKEN
+          in: header
+          description: Auth token of the logged in user
+          required: false
+          type: string
+        - name: KEY
+          in: header
+          description: API key of the domain or microservice provided key
+          required: false
+          type: string
+        - name: slug
+          in: path
+          description: Domain Key or the Slug name provided by the domain
+          required: true
+          type: string
+        - name: apiname
+          in: path
+          description: Api class name
+          required: true
+          type: string
+        - name: method
+          in: path
+          description: Api method name or the slug name provided by the api method
+          required: true
+          type: string
+        - name: params
+          in: body
+          description: Arguments to the api
+          required: false
+          schema:
+            type: object
+      responses: 
+        "200":
+          description: "Success"
+          schema: 
+            type: object
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+      security:
+      - authtoken: []
+  '/micro/service/call/put/{slug}/{apiname}/{method}': 
+    put: 
+      tags:
+        - Micro API
+      summary: Invoke a dynamic micro-api using PUT
+      consumes:
+        - "application/json"
+      produces:
+        - "text/plain"
+        - "*/*"
+        - "application/json"
+      operationId: "invokePUTApi"
+      parameters:
+        - name: TOKEN
+          in: header
+          description: Auth token of the logged in user
+          required: false
+          type: string
+        - name: KEY
+          in: header
+          description: API key of the domain or microservice provided key
+          required: false
+          type: string
+        - name: slug
+          in: path
+          description: Domain Key or the Slug name provided by the domain
+          required: true
+          type: string
+        - name: apiname
+          in: path
+          description: Api class name
+          required: true
+          type: string
+        - name: method
+          in: path
+          description: Api method name or the slug name provided by the api method
+          required: true
+          type: string
+        - name: params
+          in: body
+          description: Arguments to the api
+          required: false
+          schema:
+            type: object
+      responses: 
+        "200":
+          description: "Success"
+          schema: 
+            type: object
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+      security:
+      - authtoken: []
+  '/micro/service/call/get/{slug}/{apiname}/{method}': 
+    get: 
+      tags:
+        - Micro API
+      summary: Invoke a dynamic micro-api using GET
+      consumes:
+        - "application/json"
+      produces:
+        - "text/plain"
+        - "*/*"
+        - "application/json"
+      operationId: "invokeGETApi"
+      parameters:
+        - name: TOKEN
+          in: header
+          description: Auth token of the logged in user
+          required: false
+          type: string
+        - name: KEY
+          in: header
+          description: API key of the domain or microservice provided key
+          required: false
+          type: string
+        - name: slug
+          in: path
+          description: Domain Key or the Slug name provided by the domain
+          required: true
+          type: string
+        - name: apiname
+          in: path
+          description: Api class name
+          required: true
+          type: string
+        - name: method
+          in: path
+          description: Api method name or the slug name provided by the api method
+          required: true
+          type: string
+      responses: 
+        "200":
+          description: "Success"
+          schema: 
+            type: object
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+      security:
+      - authtoken: []
+  '/micro/service/call/post/{slug}/{apiname}/{method}': 
+    post: 
+      tags:
+        - Micro API
+      summary: Invoke a dynamic micro-api using POST
+      consumes:
+        - "application/json"
+      produces:
+        - "text/plain"
+        - "*/*"
+        - "application/json"
+      operationId: "invokePOSTApi"
+      parameters:
+        - name: TOKEN
+          in: header
+          description: Auth token of the logged in user
+          required: false
+          type: string
+        - name: KEY
+          in: header
+          description: API key of the domain or microservice provided key
+          required: false
+          type: string
+        - name: slug
+          in: path
+          description: Domain Key or the Slug name provided by the domain
+          required: true
+          type: string
+        - name: apiname
+          in: path
+          description: Api class name
+          required: true
+          type: string
+        - name: method
+          in: path
+          description: Api method name or the slug name provided by the api method
+          required: true
+          type: string
+        - name: params
+          in: body
+          description: Arguments to the api
+          required: false
+          schema:
+            type: object
+      responses: 
+        "200":
+          description: "Success"
+          schema: 
+            type: object
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+      security:
+      - authtoken: []
+  '/micro/service/{slug}/{apiname}/{method}': 
+    post: 
+      tags:
+        - Micro API
+      summary: Invoke a dynamic micro-api using POST
+      consumes:
+        - "application/json"
+      produces:
+        - "text/plain"
+        - "*/*"
+        - "application/json"
+      operationId: "invokeApi"
+      parameters:
+        - name: TOKEN
+          in: header
+          description: Auth token of the logged in user
+          required: false
+          type: string
+        - name: KEY
+          in: header
+          description: API key of the domain or microservice provided key
+          required: false
+          type: string
+        - name: slug
+          in: path
+          description: Domain Key or the Slug name provided by the domain
+          required: true
+          type: string
+        - name: apiname
+          in: path
+          description: Api class name
+          required: true
+          type: string
+        - name: method
+          in: path
+          description: Api method name or the slug name provided by the api method
+          required: true
+          type: string
+        - name: params
+          in: body
+          description: Arguments to the api
+          required: false
+          schema:
+            type: object
+      responses: 
+        "200":
+          description: "Success"
+          schema: 
+            type: object
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+      security:
+      - authtoken: []
+securityDefinitions:
+  authtoken:
+    type: "apiKey"
+    name: "TOKEN"
+    in: "header"
+definitions: 
+  Login:
+    required:
+      - email
+      - password
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  User:
+    required:
+      - email
+    properties:
+      domainKey:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      country:
+        type: string
+      state:
+        type: string
+      city:
+        type: string
+      address:
+        type: string
+      zipcode:
+        type: string
+      primaryPhone:
+        type: string
+      locale:
+        type: string
+      timezone:
+        type: string
+      workStart:
+        type: integer
+        format: int16
+      workEnd:
+        type: integer
+        format: int16
+      workDays:
+        type: array
+        items:
+          type: integer
+          format: int16
+      roles:
+        type: array
+        items:
+          type: string
+      groups:
+        type: array
+        items:
+          type: integer
+          format: int64
+      registeredStamp:
+        type: integer
+        format: int64
+  Domain:
+    required:
+      - email
+    properties:
+      domainKey:
+        type: string
+      email:
+        type: string
+      country:
+        type: string
+      state:
+        type: string
+      city:
+        type: string
+      address:
+        type: string
+      zipcode:
+        type: string
+      primaryPhone:
+        type: string
+      locale:
+        type: string
+      timezone:
+        type: string
+      registeredStamp:
+        type: integer
+        format: int64
+      startId:
+        type: integer
+        format: int64
+  PartDomain:
+    properties:
+      domainKey:
+        type: string
+      label:
+        type: string
+  LinkedDomain:
+    required:
+    - 'domainKey'
+    - 'apiKey'
+    - 'token'
+    - 'label'
+    properties:
+      domainKey:
+        type: string
+      apiKey:
+        type: string
+      token:
+        type: string
+      label:
+        type: string
+  UserDomain:
+    required:
+      - user
+      - domain
+      - token
+      - domainKey
+      - apiKey
+    properties:
+      user:
+        $ref: "#/definitions/User"
+      domain:
+        $ref: "#/definitions/Domain"
+      token:
+        type: string
+      accessToken:
+        type: string
+      domainKey:
+        type: string
+      apiKey:
+        type: string
+      label:
+        type: string
+      linkedDomains:
+        type: array
+        items:
+          $ref: "#/definitions/LinkedDomain"
+      partDomains:
+        type: array
+        items:
+          $ref: "#/definitions/PartDomain"
+      sqlAccess:
+        type: boolean
+      dbAccess:
+        type: boolean
+      mongoAccess:
+        type: boolean
+      cassandraAccess:
+        type: boolean
+      globalAccess:
+        type: boolean
+      orgs:
+        type: array
+        items:
+          type: integer
+          format: int64
+  ApiError: 
+    type: "object"
+    required: 
+      - "code"
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"
+      trace: 
+        type: "string"
+  Success: 
+    type: "object"
+    required:
+      - code
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"
+
