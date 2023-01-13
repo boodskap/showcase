@@ -1,0 +1,311 @@
+swagger: "2.0"
+host: v5.boodskap.io
+basePath: /api
+schemes:
+  - https
+info: 
+  version: "1.0.0"
+  title: "Parking API"
+  description: "Boodskap IoT Platform Showcase API"
+  termsOfService: "https://boodskap.io/terms-conditions"
+  contact: 
+    name: "Boodskap Team"
+  license: 
+    name: "MIT"
+paths:
+  '/domain/login':
+    post:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      tags:
+        - Domain
+      summary: Login with POST
+      operationId: doLogin
+      parameters:
+        - name: entity
+          in: body
+          description: Login JSON object
+          required: true
+          schema:
+            $ref: '#/definitions/Login'
+      responses:
+        '200':
+          description: "UserDomain Object"
+          schema: 
+            $ref: "#/definitions/UserDomain"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/micro/service/call/get/lqbpqjlmxugrq3ol/Parking/garages': 
+    get: 
+      tags:
+        - Smart Parking
+      summary: List all available garages
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      operationId: "listGarages"
+      responses: 
+        "200":
+          description: "Success"
+          schema: 
+            type: object
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+      security:
+      - authtoken: []
+  '/micro/service/call/post/lqbpqjlmxugrq3ol/Parking/lots': 
+    post: 
+      tags:
+        - Smart Parking
+      summary: List parking lots
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      operationId: "listParkingLogs"
+      parameters:
+        - name: params
+          in: body
+          description: Arguments to the api
+          required: false
+          schema:
+            $ref: "#/definitions/ListLots"
+      responses: 
+        "200":
+          description: "Success"
+          schema: 
+            type: object
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+      security:
+      - authtoken: []
+  '/micro/service/call/post/lqbpqjlmxugrq3ol/Parking/search': 
+    post: 
+      tags:
+        - Smart Parking
+      summary: Search garages
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      operationId: "searchGarages"
+      parameters:
+        - name: params
+          in: body
+          description: Arguments to the api
+          required: false
+          schema:
+            $ref: "#/definitions/SearchGarage"
+      responses: 
+        "200":
+          description: "Success"
+          schema: 
+            type: object
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+      security:
+      - authtoken: []
+securityDefinitions:
+  authtoken:
+    type: "apiKey"
+    name: "TOKEN"
+    in: "header"
+definitions: 
+  Login:
+    required:
+      - email
+      - password
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  User:
+    required:
+      - email
+    properties:
+      domainKey:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      country:
+        type: string
+      state:
+        type: string
+      city:
+        type: string
+      address:
+        type: string
+      zipcode:
+        type: string
+      primaryPhone:
+        type: string
+      locale:
+        type: string
+      timezone:
+        type: string
+      workStart:
+        type: integer
+        format: int16
+      workEnd:
+        type: integer
+        format: int16
+      workDays:
+        type: array
+        items:
+          type: integer
+          format: int16
+      roles:
+        type: array
+        items:
+          type: string
+      groups:
+        type: array
+        items:
+          type: integer
+          format: int64
+      registeredStamp:
+        type: integer
+        format: int64
+  Domain:
+    required:
+      - email
+    properties:
+      domainKey:
+        type: string
+      email:
+        type: string
+      country:
+        type: string
+      state:
+        type: string
+      city:
+        type: string
+      address:
+        type: string
+      zipcode:
+        type: string
+      primaryPhone:
+        type: string
+      locale:
+        type: string
+      timezone:
+        type: string
+      registeredStamp:
+        type: integer
+        format: int64
+      startId:
+        type: integer
+        format: int64
+  PartDomain:
+    properties:
+      domainKey:
+        type: string
+      label:
+        type: string
+  LinkedDomain:
+    required:
+    - 'domainKey'
+    - 'apiKey'
+    - 'token'
+    - 'label'
+    properties:
+      domainKey:
+        type: string
+      apiKey:
+        type: string
+      token:
+        type: string
+      label:
+        type: string
+  UserDomain:
+    required:
+      - user
+      - domain
+      - token
+      - domainKey
+      - apiKey
+    properties:
+      user:
+        $ref: "#/definitions/User"
+      domain:
+        $ref: "#/definitions/Domain"
+      token:
+        type: string
+      accessToken:
+        type: string
+      domainKey:
+        type: string
+      apiKey:
+        type: string
+      label:
+        type: string
+      linkedDomains:
+        type: array
+        items:
+          $ref: "#/definitions/LinkedDomain"
+      partDomains:
+        type: array
+        items:
+          $ref: "#/definitions/PartDomain"
+      sqlAccess:
+        type: boolean
+      dbAccess:
+        type: boolean
+      mongoAccess:
+        type: boolean
+      cassandraAccess:
+        type: boolean
+      globalAccess:
+        type: boolean
+      orgs:
+        type: array
+        items:
+          type: integer
+          format: int64
+  ApiError: 
+    type: "object"
+    required: 
+      - "code"
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"
+      trace: 
+        type: "string"
+  ListLots: 
+    type: "object"
+    required:
+      - garage
+    properties: 
+      garage: 
+        type: "string"
+  SearchGarage: 
+    type: "object"
+    required:
+      - size
+      - search
+    properties: 
+      size: 
+        type: "integer"
+      search: 
+        type: "string"
+
